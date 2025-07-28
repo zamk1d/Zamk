@@ -1,2 +1,5 @@
 Auth_service/.env
 .env
+__pycache__/
+*.pyc
+.idea/
