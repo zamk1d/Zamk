@@ -3,6 +3,7 @@ from fastapi import HTTPException
 from sqlalchemy import select
 from uuid import uuid4
 
+from src.database.redis_db.redis import check_code, redis
 from src.repository.pg.crud import create_user, set_jti, get_user
 from src.schemas.routes.token.token_schemas import TokenResponseSchema
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -22,8 +23,14 @@ async def login(email: str, password: str, db: AsyncSession) -> TokenResponseSch
 
     return TokenResponseSchema(access_token=tokens.get("at"), refresh_token=tokens.get("rt"))
 
-async def register(email: str, password: str, db: AsyncSession) -> TokenResponseSchema:
+async def register(email: str, password: str, code: str, db: AsyncSession) -> TokenResponseSchema:
     """business-logic of /register endpoint."""
+
+    code_checked = await check_code(email=email, input_code=code)
+    if not code_checked:
+        raise HTTPException(status_code=403, detail="Invalid code")
+    await redis.delete(f"verify_code: {email}")
+
     user_uuid = await create_user(email=email, password=hash_password(password), uuid=str(uuid4()), db=db)
 
     payload = {"sub": user_uuid}
