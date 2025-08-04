@@ -9,6 +9,7 @@ from src.database.pg.async_session import get_db
 from src.schemas.routes.auth.auth_schemas import LoginSchema, RegisterSchema
 from src.schemas.routes.token.token_schemas import TokenResponseSchema, AccessTokenSchema
 from src.services.auth import register, login
+from src.services.send_code import send
 
 auth = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -43,3 +44,9 @@ async def register_user(
         **RefreshCookieSettings().model_dump()
     )
     return AccessTokenSchema(access_token=tokens.access_token)
+
+@auth.post("/send_code", status_code=200)
+async def send_code(email: Annotated[str, Body()]) -> dict:
+    """Send code to email"""
+    await send(email=email)
+    return {"status": "ok"}
