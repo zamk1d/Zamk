@@ -1,13 +1,14 @@
 """Env settings."""
-import os
 from pydantic_settings import BaseSettings
-from dotenv import load_dotenv
-load_dotenv(os.path.join("..",".env"))
 
 class Settings(BaseSettings):
-    DATABASE_URL: str = None
+    DATABASE_URL: str
+    RABBIT_URL: str
+    att: int = 15
+    rtt: int = 7
 
     class Config:
         env_file = ".env"
+        env_file_encoding = 'utf-8'
 
 settings = Settings()
