@@ -1,4 +1,5 @@
 Auth_service/.env
+Auth_service/.db_viewer.py
 .env
 __pycache__/
 *.pyc
