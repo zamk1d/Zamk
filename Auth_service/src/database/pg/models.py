@@ -1,10 +1,8 @@
 """Database table model."""
 
 from sqlalchemy import Table, Integer, String, Column, ForeignKey, Boolean, DateTime
-from sqlalchemy.orm import declarative_base
-from datetime import datetime
-
-Base = declarative_base()
+from src.database.pg.base import Base
+import uuid
 
 class Clients(Base):
     __tablename__ = "clients"
@@ -12,5 +10,5 @@ class Clients(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     email = Column(String, unique=True, nullable=False)
     hashed_password = Column(String, nullable=False)
-    refresh_token = Column(String)
-    uuid = Column(String, unique=True, nullable=False)
+    jti = Column(String, unique=True)
+    uuid = Column(String, unique=True, nullable=False, default=str(uuid.uuid4), index=True)
