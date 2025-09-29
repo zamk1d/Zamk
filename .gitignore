@@ -1,5 +1,10 @@
 Auth_service/.env
 Auth_service/.db_viewer.py
+Auth_service/.coverage
+Auth_service/private_key.pem
+Auth_service/public_key.pem
+Auth_service/pytest.ini
+Auth_service/TODO.md
 .env
 __pycache__/
 *.pyc
