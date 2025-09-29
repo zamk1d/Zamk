@@ -6,7 +6,7 @@ from src.config.settings import settings
 
 async def connect_to_rabbitmq():
     connection = await aio_pika.connect_robust(
-        settings.RABBITMQ_HOST
+        settings.RABBIT_URL
     )
     return connection
 
