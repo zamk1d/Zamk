@@ -40,9 +40,10 @@ def create_jwt(payload: dict, access_exp_minutes: int = settings.att, refresh_ex
     return {"at": access_token, "rt": refresh_token, "jti": jti}
 
 def verify_token(token: str) -> dict:
-    payload = jwt.decode(token, PUBLIC_KEY, algorithms=["RS256"])
-    exp_time = payload.get("exp")
-    if exp_time is None or exp_time < datetime.datetime.now(datetime.timezone.utc).timestamp():
+    try:
+        payload = jwt.decode(token, PUBLIC_KEY, algorithms=["RS256"])
+        exp_time = payload.get("exp")
+    except jwt.ExpiredSignatureError:
         raise HTTPException(status_code=401, detail="Token expired")
     return payload
 
