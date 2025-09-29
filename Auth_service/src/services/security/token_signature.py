@@ -18,6 +18,9 @@ with open("public_key.pem", "rb") as f:
 def create_jwt(payload: dict, access_exp_minutes: int = settings.att, refresh_exp_days: int = settings.rtt) -> dict:
     now = datetime.datetime.now(datetime.timezone.utc)
 
+    if "sub" not in payload.keys():
+        raise MissingSubClaimError("'sub' claim is required in payload")
+
     access_payload = payload.copy()
     access_payload.update({
         "exp": int((now + datetime.timedelta(minutes=access_exp_minutes)).timestamp()),
