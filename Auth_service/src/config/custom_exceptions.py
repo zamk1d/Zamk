@@ -1,0 +1,2 @@
+class MissingSubClaimError(ValueError):
+    pass
