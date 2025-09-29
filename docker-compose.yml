@@ -9,7 +9,10 @@ services:
     env_file:
       - ./Auth_service/.env  # 👈 указываем .env
     depends_on:
-      - auth_service_db
+      auth_service_db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     networks:
       - zamk_net
 
@@ -27,6 +30,33 @@ services:
       - "5432:5432"
     env_file:
       - .env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - zamk_net
+
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - zamk_net
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
     networks:
       - zamk_net
 
