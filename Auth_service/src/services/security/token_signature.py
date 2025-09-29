@@ -5,6 +5,7 @@ import jwt
 import datetime
 from fastapi import HTTPException
 
+from src.config.custom_exceptions import MissingSubClaimError
 from src.config.settings import settings
 
 """Tokens"""
